@@ -32,6 +32,7 @@ namespace CleanArchitecture.Controllers
             {
                 _context.Categories.Add(category);
                 await _context.SaveChangesAsync();
+                TempData["success"] = "Category Created successfuly";
                 return RedirectToAction("Index");
             }
             return View();
@@ -52,6 +53,7 @@ namespace CleanArchitecture.Controllers
             {
                 _context.Categories.Update(category);
                 await _context.SaveChangesAsync();
+                TempData["success"] = "Category Edited successfuly";
                 return RedirectToAction("Index");
             }
             return View();
@@ -72,8 +74,11 @@ namespace CleanArchitecture.Controllers
             {
                 _context.Categories.Remove(category);
                 await _context.SaveChangesAsync();
+                TempData["success"] = "Category deleted successfuly";
                 return RedirectToAction("Index");
             }
+            TempData["error"] = "Category Not deleted successfuly";
+
             return View();
         }
 
