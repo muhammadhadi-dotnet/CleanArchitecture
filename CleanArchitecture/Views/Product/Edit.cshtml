@@ -1,0 +1,12 @@
+﻿@model Product;
+@{
+}
+<h3 class="mb-4">Edit Product</h3>
+<form action="Edit" method="post">
+    <input asp-for="Id" hidden />
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">Product Name</label>
+        <input type="text" asp-for="Name" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-outline-info">Edit Category</button>
+</form>
