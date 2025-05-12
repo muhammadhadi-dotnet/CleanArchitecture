@@ -17,17 +17,7 @@ namespace CleanArchitecture.Infrastructure.Data.Services
         {
             _context = context;
         }
-        //public async Task AddProduct(Product product)
-        //{
-        //    _context.Products.Add(product);
-        //   await _context.SaveChangesAsync();
-        //}
-
-        //public void DeleteProduct(Product product)
-        //{
-        //    _context.Products.Remove(product);
-        //}
-
+        
         public async Task<IEnumerable<Product>> GetAllProducts()
         {
             var products =await _context.Products.Include(c => c.Category).ToListAsync();
@@ -39,17 +29,6 @@ namespace CleanArchitecture.Infrastructure.Data.Services
             var product =await _context.Products.FirstOrDefaultAsync(i => i.Id == id);
             return product;
         } 
-
-        public async Task Save()
-        {
-          await _context.SaveChangesAsync();
-        }
-
-        //public void UpdateProduct(Product product)
-        //{
-        //    _context.Products.Update(product);
-
-        //}
 
         public async Task<IEnumerable<Category>> Category()
         {

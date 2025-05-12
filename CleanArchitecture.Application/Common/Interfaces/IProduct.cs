@@ -16,7 +16,7 @@ namespace CleanArchitecture.Application.Common.Interface
         Task<Product> GetProductById(int id);
  
         Task<IEnumerable<Category>> Category();
-        Task Save();
+
              
     }
 }

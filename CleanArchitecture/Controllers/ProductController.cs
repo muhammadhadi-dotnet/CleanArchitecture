@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Application.Common.Interface;
+using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Domain.Entity;
 using CleanArchitecture.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -9,21 +10,21 @@ namespace CleanArchitecture.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly IProduct _IProduct;
+        private readonly IUnitOfWork _UnitofWork;
 
-        public ProductController(IProduct IProduct)
+        public ProductController(IUnitOfWork UnitofWork)
         {
-            _IProduct = IProduct;
+            _UnitofWork = UnitofWork;
         }
         public async Task<IActionResult> Index()
         {
-            var products = await _IProduct.GetAllProducts();
+            var products = await _UnitofWork.product.GetAllProducts();
             return View(products);
         }
 
         public async Task<IActionResult> Create()
         {
-            ViewData["cagegories"] = new SelectList(await _IProduct.Category(), "Id", "Name");
+            ViewData["cagegories"] = new SelectList(await _UnitofWork.product.Category(), "Id", "Name");
             return View();
         }
 
@@ -32,8 +33,8 @@ namespace CleanArchitecture.Controllers
         {
             if (ModelState.IsValid)
             {
-                _IProduct.Add(product);
-                await _IProduct.Save();
+                _UnitofWork.product.Add(product);
+                await _UnitofWork.Save();
                 TempData["success"] = "Product Created successfuly";
                 return RedirectToAction("Index");
             }
@@ -42,8 +43,8 @@ namespace CleanArchitecture.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var product = await _IProduct.GetProductById(id);
-            ViewData["cagegories"] = new SelectList(await _IProduct.Category(), "Id", "Name");
+            var product = await _UnitofWork.product.GetProductById(id);
+            ViewData["cagegories"] = new SelectList(await _UnitofWork.product.Category(), "Id", "Name");
             return View(product);
         }
 
@@ -53,18 +54,18 @@ namespace CleanArchitecture.Controllers
         {
             if (ModelState.IsValid)
             {
-               _IProduct.Update(product);
-                await _IProduct.Save();
+                _UnitofWork.product.Update(product);
+                await _UnitofWork.Save();
                 TempData["success"] = "Product Edited successfuly";
                 return RedirectToAction("Index");
             }
-            ViewData["cagegories"] = new SelectList(await _IProduct.Category(), "Id", "Name");
+            ViewData["cagegories"] = new SelectList(await _UnitofWork.product.Category(), "Id", "Name");
             return View();
         }
 
         public async Task<IActionResult> Delete(int id)
         {
-            var product = await _IProduct.GetProductById(id);
+            var product = await _UnitofWork.product.GetProductById(id);
             return View(product);
         }
         [HttpPost]
@@ -72,8 +73,8 @@ namespace CleanArchitecture.Controllers
         {
             if (ModelState.IsValid)
             {
-                _IProduct.Delete(product);
-                await _IProduct.Save();
+                _UnitofWork.product.Delete(product);
+                await _UnitofWork.Save();
                 TempData["success"] = "Product Deleted successfuly";
                 return RedirectToAction("Index");
             }

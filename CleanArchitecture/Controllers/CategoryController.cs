@@ -1,23 +1,21 @@
-﻿using CleanArchitecture.Domain.Entity;
-using CleanArchitecture.Infrastructure.Data;
+﻿using CleanArchitecture.Application.Common.Interfaces;
+using CleanArchitecture.Domain.Entity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace CleanArchitecture.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly MyDbContext _context;
-        public CategoryController(MyDbContext context)
-        {
-            _context = context;
-        }
+        private readonly IUnitOfWork _UnitofWork;
 
+        public CategoryController(IUnitOfWork unitofWork)
+        {
+            _UnitofWork = unitofWork;
+        }
         public async Task<IActionResult> Index()
         {
-            var categores = await _context.Categories.ToListAsync();
+            var categores = await _UnitofWork.category.GetAllCategories();
 
             return View(categores);
         }
@@ -32,8 +30,8 @@ namespace CleanArchitecture.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Categories.Add(category);
-                await _context.SaveChangesAsync();
+                _UnitofWork.category.Add(category);
+               await _UnitofWork.Save();
                 TempData["success"] = "Category Created successfuly";
                 return RedirectToAction("Index");
             }
@@ -42,7 +40,7 @@ namespace CleanArchitecture.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var category=await _context.Categories.FindAsync(id);
+            var category= await _UnitofWork.category.GetCategoryById(id);
 
             return View(category);
         }
@@ -53,8 +51,8 @@ namespace CleanArchitecture.Controllers
 
             if (ModelState.IsValid)
             {
-                _context.Categories.Update(category);
-                await _context.SaveChangesAsync();
+                _UnitofWork.category.Update(category);
+                await _UnitofWork.Save();
                 TempData["success"] = "Category Edited successfuly";
                 return RedirectToAction("Index");
             }
@@ -63,8 +61,7 @@ namespace CleanArchitecture.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
-
+            var category = await _UnitofWork.category.GetCategoryById(id);
             return View(category);
         }
 
@@ -74,8 +71,8 @@ namespace CleanArchitecture.Controllers
 
             if (category != null)
             {
-                _context.Categories.Remove(category);
-                await _context.SaveChangesAsync();
+                _UnitofWork.category.Delete(category);
+                await _UnitofWork.Save();
                 TempData["success"] = "Category deleted successfuly";
                 return RedirectToAction("Index");
             }
