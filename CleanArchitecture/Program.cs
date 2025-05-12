@@ -1,4 +1,6 @@
+using CleanArchitecture.Application.Common.Interface;
 using CleanArchitecture.Infrastructure.Data;
+using CleanArchitecture.Infrastructure.Data.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +12,7 @@ builder.Services.AddDbContext<MyDbContext>(options =>
     options.UseMySql(DefaultConnection, ServerVersion.AutoDetect(DefaultConnection)
 
   ));
-
+builder.Services.AddScoped<IProduct, ProductServies>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,6 +1,8 @@
 ﻿using CleanArchitecture.Domain.Entity;
 using CleanArchitecture.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Controllers

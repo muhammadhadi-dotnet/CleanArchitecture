@@ -7,5 +7,9 @@
         <label asp-for="Name" class="form-label">Product Name</label>
         <input type="text" asp-for="Name" class="form-control" >
     </div>
+    <div class="mb-3">
+        <label asp-for="CategoryId" class="form-label">Select Category Name</label>
+        <select asp-for="CategoryId" asp-items="ViewBag.cagegories" class="form-control"></select>
+    </div>
     <button type="submit" class="btn btn-outline-success">Create Category</button>
 </form>

@@ -1,37 +1,38 @@
-﻿using CleanArchitecture.Domain.Entity;
+﻿using CleanArchitecture.Application.Common.Interface;
+using CleanArchitecture.Domain.Entity;
 using CleanArchitecture.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly MyDbContext _context;
+        private readonly IProduct _IProduct;
 
-        public ProductController(MyDbContext context)
+        public ProductController(IProduct IProduct)
         {
-            _context = context;
+            _IProduct = IProduct;
         }
         public async Task<IActionResult> Index()
         {
-            var products = await _context.Products.ToListAsync();
+            var products = await _IProduct.GetAllProducts();
             return View(products);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            ViewData["cagegories"] = new SelectList(await _IProduct.Category(), "Id", "Name");
             return View();
         }
 
         [HttpPost]
-
         public async Task<IActionResult> Create(Product product)
         {
             if (ModelState.IsValid)
             {
-                _context.Products.Add(product);
-                await _context.SaveChangesAsync();
+               await _IProduct.AddProduct(product);
                 TempData["success"] = "Product Created successfuly";
                 return RedirectToAction("Index");
             }
@@ -40,7 +41,8 @@ namespace CleanArchitecture.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(i => i.Id == id);
+            var product = await _IProduct.GetProductById(id);
+            ViewData["cagegories"] = new SelectList(await _IProduct.Category(), "Id", "Name");
             return View(product);
         }
 
@@ -50,17 +52,18 @@ namespace CleanArchitecture.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Products.Update(product);
-                await _context.SaveChangesAsync();
+               await _IProduct.UpdateProduct(product);
+               await _IProduct.Save();
                 TempData["success"] = "Product Edited successfuly";
                 return RedirectToAction("Index");
             }
+            ViewData["cagegories"] = new SelectList(await _IProduct.Category(), "Id", "Name");
             return View();
         }
 
         public async Task<IActionResult> Delete(int id)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(i => i.Id == id);
+            var product = await _IProduct.GetProductById(id);
             return View(product);
         }
         [HttpPost]
@@ -68,8 +71,8 @@ namespace CleanArchitecture.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Products.Remove(product);
-                await _context.SaveChangesAsync();
+                _IProduct.DeleteProduct(product);
+               await _IProduct.Save();
                 TempData["success"] = "Product Deleted successfuly";
                 return RedirectToAction("Index");
             }
