@@ -32,7 +32,8 @@ namespace CleanArchitecture.Controllers
         {
             if (ModelState.IsValid)
             {
-               await _IProduct.AddProduct(product);
+                _IProduct.Add(product);
+                await _IProduct.Save();
                 TempData["success"] = "Product Created successfuly";
                 return RedirectToAction("Index");
             }
@@ -52,8 +53,8 @@ namespace CleanArchitecture.Controllers
         {
             if (ModelState.IsValid)
             {
-               await _IProduct.UpdateProduct(product);
-               await _IProduct.Save();
+               _IProduct.Update(product);
+                await _IProduct.Save();
                 TempData["success"] = "Product Edited successfuly";
                 return RedirectToAction("Index");
             }
@@ -71,8 +72,8 @@ namespace CleanArchitecture.Controllers
         {
             if (ModelState.IsValid)
             {
-                _IProduct.DeleteProduct(product);
-               await _IProduct.Save();
+                _IProduct.Delete(product);
+                await _IProduct.Save();
                 TempData["success"] = "Product Deleted successfuly";
                 return RedirectToAction("Index");
             }

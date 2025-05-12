@@ -10,23 +10,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Infrastructure.Data.Services
 {
-    public class ProductServies : IProduct
+    public class ProductServies :Service<Product>,IProduct
     {
         private readonly MyDbContext _context;
-        public ProductServies(MyDbContext context)
+        public ProductServies(MyDbContext context):base(context)
         {
             _context = context;
         }
-        public async Task AddProduct(Product product)
-        {
-            _context.Products.Add(product);
-           await _context.SaveChangesAsync();
-        }
+        //public async Task AddProduct(Product product)
+        //{
+        //    _context.Products.Add(product);
+        //   await _context.SaveChangesAsync();
+        //}
 
-        public void DeleteProduct(Product product)
-        {
-            _context.Products.Remove(product);
-        }
+        //public void DeleteProduct(Product product)
+        //{
+        //    _context.Products.Remove(product);
+        //}
 
         public async Task<IEnumerable<Product>> GetAllProducts()
         {
@@ -40,16 +40,16 @@ namespace CleanArchitecture.Infrastructure.Data.Services
             return product;
         } 
 
-        public async  Task Save()
+        public async Task Save()
         {
           await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateProduct(Product product)
-        {
-            _context.Products.Update(product);
+        //public void UpdateProduct(Product product)
+        //{
+        //    _context.Products.Update(product);
 
-        }
+        //}
 
         public async Task<IEnumerable<Category>> Category()
         {
