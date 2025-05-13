@@ -4,6 +4,7 @@ using CleanArchitecture.Infrastructure.Data;
 using CleanArchitecture.Infrastructure.Data.Services;
 using CleanArchitecture.Middleware;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,10 @@ builder.Services.AddDbContext<MyDbContext>(options =>
     options.UseMySql(DefaultConnection, ServerVersion.AutoDetect(DefaultConnection)
 
   ));
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<MyDbContext>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddRazorPages();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -28,8 +32,9 @@ if (!app.Environment.IsDevelopment())
 //app.UseMiddleware<AgeCheckMiddleware>();
 app.UseHttpsRedirection();
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
+app.MapRazorPages();    
 
 app.MapStaticAssets();
 
